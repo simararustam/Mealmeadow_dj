@@ -25,3 +25,4 @@ class Food(models.Model):
             'restaurant_id': self.restaurant.id,
             'restaurant_name': self.restaurant.name
         }
+

@@ -1,5 +1,9 @@
 from django.http import JsonResponse
 from ..models import Food
+from rest_framework.decorators import api_view
+from ..serializers import FoodSerializer
+from rest_framework.response import Response
+from rest_framework import status
 
 def get_food_detail(request, food_id):
     try:
@@ -27,3 +31,15 @@ def get_all_foods(request):
     all_foods = Food.objects.all()
     food_data = [f.to_dict() for f in all_foods]
     return JsonResponse(food_data, safe=False, json_dumps_params={'indent': 2}, status = 200)
+
+# !-----partnyorlar-----
+
+@api_view(['POST'])
+def submit_food_for_approval(request):
+    """Submit a food item for approval."""
+    serializer = FoodSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        # food.submit_for_approval()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return JsonResponse(serializer.errors, json_dumps={'indent': 2}, status=status.HTTP_400_BAD_REQUEST)

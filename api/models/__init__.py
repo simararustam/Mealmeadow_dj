@@ -1,3 +1,7 @@
 from .food import Food
 from .restaurant import Restaurant
 from .rating import Rating
+from .notification import Notification
+from .order import Order
+from .setting import Setting
+from .foodOrder import OrderFood
