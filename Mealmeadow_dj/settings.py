@@ -21,8 +21,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_swagger',
     'rest_framework.authtoken',
     'api',
+    'drf_yasg',
 ]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -66,7 +68,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'restaurant_db',
         'USER': 'postgres',
-        'PASSWORD': '-------',
+        'PASSWORD': 'simoshh777',
         'HOST': 'localhost',
         'PORT': '5432',
     }

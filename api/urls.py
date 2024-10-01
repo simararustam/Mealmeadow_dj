@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from .views.food_views import get_food_detail, get_foods, get_all_foods, submit_food_for_approval
 from .views.restaurant_views import get_restaurants, get_all_restaurants, get_restaurant_detail, edit_restaurant_profile
 from api.views.restaurant_views import create_restaurant
@@ -7,11 +7,13 @@ from .views.order_view import create_order, get_order
 from .views.notifi_view import get_notifications
 from .views.setting_view import update_settings
 
+
 urlpatterns = [
     # Restaurant URLs
     path('restaurants/', get_restaurants, name='get_restaurants'), #OK
     path('restaurants/all/', get_all_restaurants, name='get_all_restaurants'), #OK
     path('restaurants/<int:pk>/', get_restaurant_detail, name='restaurant_detail'), #OK
+    
     path('restaurants/create/', create_restaurant, name='create_restaurant'),#OK
     path('restaurants/<int:pk>/edit/', edit_restaurant_profile, name='edit_restaurant_profile'), #OK
     

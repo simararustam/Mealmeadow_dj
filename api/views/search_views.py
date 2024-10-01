@@ -1,7 +1,22 @@
 from django.http import JsonResponse
 from ..models.restaurant import Restaurant
 from ..models.food import Food
+from rest_framework.decorators import api_view
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
+@swagger_auto_schema(
+    method='get',
+    manual_parameters=[
+        openapi.Parameter('query', openapi.IN_QUERY, description="Search query", type=openapi.TYPE_STRING),
+        openapi.Parameter('food_type', openapi.IN_QUERY, description="Filter by food type (can be multiple)", type=openapi.TYPE_ARRAY, items=openapi.Items(type=openapi.TYPE_STRING)),
+        openapi.Parameter('min_rating', openapi.IN_QUERY, description="Minimum rating filter", type=openapi.TYPE_NUMBER),
+        openapi.Parameter('max_rating', openapi.IN_QUERY, description="Maximum rating filter", type=openapi.TYPE_NUMBER)
+    ],
+    responses={200: "Success"}
+)
+
+@api_view(['GET'])
 def search(request):
     query = request.GET.get('query', '')
     food_type = request.GET.getlist('food_type')
@@ -26,6 +41,18 @@ def search(request):
         'foods': [f.to_dict() for f in foods],
     }, json_dumps_params={'indent': 2}, safe=False)
 
+
+@swagger_auto_schema(
+    method='get',
+    manual_parameters=[
+        openapi.Parameter('query', openapi.IN_QUERY, description="Search query", type=openapi.TYPE_STRING),
+        openapi.Parameter('food_type', openapi.IN_QUERY, description="Filter by food type (can be multiple)", type=openapi.TYPE_ARRAY, items=openapi.Items(type=openapi.TYPE_STRING)),
+        openapi.Parameter('min_rating', openapi.IN_QUERY, description="Minimum rating filter", type=openapi.TYPE_NUMBER),
+        openapi.Parameter('max_rating', openapi.IN_QUERY, description="Maximum rating filter", type=openapi.TYPE_NUMBER)
+    ],
+    responses={200: "Success"}
+)
+@api_view(['GET'])
 def search_all(request):
     query = request.GET.get('query', '')
     food_type = request.GET.getlist('food_type')
