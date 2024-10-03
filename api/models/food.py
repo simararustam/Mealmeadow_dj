@@ -1,14 +1,17 @@
 from django.db import models
+from .restaurant import Restaurant
 
 class Food(models.Model):
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, default=None)
     name = models.CharField(max_length=100)
     food_type = models.CharField(max_length=50)
     price = models.FloatField()
-    restaurant = models.ForeignKey('Restaurant', on_delete=models.CASCADE, related_name='foods')
+    restaurant = models.ForeignKey('Restaurant', on_delete=models.CASCADE, related_name='foods', default=None)
     discounted_price = models.FloatField(blank=True, null=True)
     discounted_rate = models.FloatField(blank=True, null=True)
     description = models.TextField(blank=True)
     image_url = models.CharField(max_length=255, blank=True)
+    # image_url = models.ImageField(upload_to='food_images/')
     pickup_time = models.CharField(max_length=100, blank=True)
 
     def to_dict(self):

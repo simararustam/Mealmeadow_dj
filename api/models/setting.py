@@ -2,7 +2,7 @@ from django.db import models
 from .restaurant import Restaurant
 
 class Setting(models.Model):
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, default=None)
     logo = models.ImageField(upload_to='settings_logos/', blank=True, null=True)
     owner_name = models.CharField(max_length=255)
     contact_number = models.CharField(max_length=20)
