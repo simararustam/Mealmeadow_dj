@@ -12,11 +12,9 @@ class FoodSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class OrderSerializer(serializers.ModelSerializer):
-    food_items = FoodSerializer(many=True, read_only=True)
-
-    class Meta():
+    class Meta:
         model = Order
-        fields = '__all__'
+        fields = ['user', 'restaurant', 'food_items']
 
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta():
