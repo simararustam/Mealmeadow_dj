@@ -6,6 +6,3 @@ class PaymentMethod(models.Model):
     card_number = models.CharField(max_length=16)
     expiration_date = models.CharField(max_length=5)  # MM/YY format
     cardholder_name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return f"Payment Method for {self.user.username}"

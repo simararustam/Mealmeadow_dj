@@ -4,20 +4,23 @@ from rest_framework.response import Response
 from ..models import Restaurant, Food, Order, Notification
 from ..serializers import OrderSerializer, NotificationSerializer
 from drf_yasg.utils import swagger_auto_schema
+from django.http import JsonResponse
 
 @swagger_auto_schema(method='post', request_body=OrderSerializer)
 @api_view(['POST'])
 def create_order(request):
+    print("Creating order...")
     serializer = OrderSerializer(data=request.data)
     if serializer.is_valid():
         order = serializer.save()
-        
-        # Bildiriş yaratmaq
+        # Create notification
+        print("Creating notification...")
         Notification.objects.create(
             restaurant=order.restaurant,
-            message=f"Yeni sifariş alindi: {order.id}, Məbləğ: {order.total_amount}."
+            order=order,
+            message=f"Yeni sifariş alindi: {order.id}, Məbləğ: {order.total_amount}.",
+            type='Order'
         )
-        
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

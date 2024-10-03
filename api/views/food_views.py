@@ -51,7 +51,9 @@ def get_all_foods(request):
 def submit_food(request):
     serializer = FoodSerializer(data=request.data)
     if serializer.is_valid():
+        if Food.objects.filter(name=serializer.validated_data['name']).exists():
+            return Response({"error": "Food item already exists."}, status=status.HTTP_400_BAD_REQUEST)
+        
         serializer.save()
-        # food.submit_for_approval()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return JsonResponse(serializer.errors, json_dumps={'indent': 2}, status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -20,7 +20,7 @@ from drf_yasg import openapi
 def get_restaurants(request):
     '''sehifelemeye uygun deyerler qaytarir'''
     page = int(request.GET.get('page', 1))
-    per_page = int(request.GET.get('limit', 8))
+    per_page = int(request.GET.get('limit', 5))
     restaurants = Restaurant.objects.all()[(page-1)*per_page:page*per_page]
 
     return JsonResponse({
@@ -49,7 +49,7 @@ def create_restaurant(request):
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST, json_dums={'indent': 2})
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @swagger_auto_schema(
     method='put', 
