@@ -46,9 +46,9 @@ def get_all_foods(request):
     return JsonResponse(food_data, safe=False, json_dumps_params={'indent': 2}, status = 200)
 
 # !-----partnyorlar-----
+@swagger_auto_schema(method='post', request_body=FoodSerializer)
 @api_view(['POST'])
-def submit_food_for_approval(request):
-    """Submit a food item for approval."""
+def submit_food(request):
     serializer = FoodSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
