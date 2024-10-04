@@ -8,19 +8,17 @@ from ..models import Order
 @login_required
 def send_receipt_email(request, order_id):
     order = Order.objects.get(id=order_id, user=request.user)
-    
-    # Email məzmunu
-    subject = f"Order Receipt for Order {order.id}"
-    message = f"Here is the receipt for your order from {order.restaurant.name}. Thank you for your purchase!"
+
+    subject = f"Sifariş çeki {order.id}"
+    message = f"{order.restaurant.name}"
     recipient = request.user.email
     
-    # send_mail funksiyasını istifadə edərək email göndəririk
     send_mail(
         subject,
         message,
-        'from@example.com',  # Göndərən email
-        [recipient],         # Alıcı email
+        'from@example.com',
+        [recipient],
         fail_silently=False
     )
     
-    return JsonResponse({'status': 'Receipt email sent successfully'}, status=200)
+    return JsonResponse({'status': 'Çek uğurla göndərildi'}, status=200)

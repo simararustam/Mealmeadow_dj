@@ -9,7 +9,7 @@ from .views.user_orders import user_orders
 from .views.user_profile import user_profile 
 from .views.edit_user_profile import edit_profile
 from .views.send_receipt_email import send_receipt_email
-
+from .views.login import RegisterView, LoginView
 
 urlpatterns = [
     # Restaurant URLs
@@ -42,5 +42,8 @@ urlpatterns = [
     #! user dashboard TEST
     path('user_profile/', user_profile, name='user_profile'),
     path('user_profile/edit/', edit_profile, name='edit_profile'),
+    
+    path('register/', RegisterView.as_view(), name='register'),
+    path('login/', LoginView.as_view(), name='login'),
 ]
 

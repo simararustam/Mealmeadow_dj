@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from ..models import Restaurant, Food, Order, Notification
 from ..serializers import OrderSerializer, NotificationSerializer
 from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from django.http import JsonResponse
 
 @swagger_auto_schema(method='post', request_body=OrderSerializer)
