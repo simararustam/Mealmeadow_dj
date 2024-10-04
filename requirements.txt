@@ -52,3 +52,6 @@ uritemplate==4.1.1
 urllib3==2.2.3
 virtualenv==20.26.2
 zipp==1.0.0
+psycopg2
+psycopg2-binary
+uWSGI
