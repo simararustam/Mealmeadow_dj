@@ -16,7 +16,7 @@ class RegisterView(APIView):
         responses={
             201: 'User registered successfully', 
             400: 'Bad Request'
-        }
+        },
     )
 
     def post(self, request, *args, **kwargs):
@@ -39,7 +39,7 @@ class LoginView(APIView):
                 'access': openapi.Schema(type=openapi.TYPE_STRING, description='Access Token'),
             },
         )),
-        400: 'Invalid credentials'}
+        400: 'Invalid credentials'},
     )
 
     def post(self, request, *args, **kwargs):

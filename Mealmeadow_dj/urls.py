@@ -32,7 +32,6 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 )
 
-URLVERSION = 'v1'
 
 def home_view(request):
     return HttpResponse("Welcome to MealMeadow!")
@@ -42,7 +41,7 @@ urlpatterns = [
     path('api/', include('api.urls')),
     path('', home_view, name='home'),
 
-    path('api/' + URLVERSION + '/', include('users.urls')),
+    path('api/', include('users.urls')),
 
     
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
