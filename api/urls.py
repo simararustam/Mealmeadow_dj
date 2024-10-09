@@ -1,7 +1,7 @@
 from django.urls import path
 from .views.food_views import get_food_detail, get_foods, get_all_foods, submit_food
 from .views.restaurant_views import get_restaurants, get_all_restaurants, get_restaurant_detail, edit_restaurant_profile
-from .views.restaurant_views import create_restaurant
+from .views.restaurant_views import create_restaurant, get_nearby_restaurants
 from .views.search_views import search, search_all
 from .views.order_view import create_order, get_order
 from .views.notifi_view import get_notifications
@@ -17,7 +17,8 @@ urlpatterns = [
     path('restaurants/all/', get_all_restaurants, name='get_all_restaurants'),
     path('restaurants/<int:pk>/', get_restaurant_detail, name='restaurant_detail'),
     path('restaurants/create/', create_restaurant, name='create_restaurant'),
-    path('restaurants/<int:pk>/edit/', edit_restaurant_profile, name='edit_restaurant_profile'), 
+    path('restaurants/<int:pk>/edit/', edit_restaurant_profile, name='edit_restaurant_profile'),
+    path('nearby/restaurants/', get_nearby_restaurants, name='nearby_restaurants'),
     
     # Food URLs
     path('foods/<int:food_id>/', get_food_detail, name='food_detail'),

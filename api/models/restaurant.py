@@ -12,11 +12,16 @@ class Restaurant(models.Model):
     email = models.EmailField(default='default@example.com')
     logo = models.CharField(max_length=255, blank=True, null=True)
     # logo = models.ImageField(upload_to='restaurant_logos/')
+
+    latitude = models.FloatField()
+    longitude = models.FloatField()
     
     def to_dict(self):
         return {
             'id': self.id,
             'name': self.name,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
             'category': self.category,
             'rating': self.rating,
             'owner_name': self.owner_name,

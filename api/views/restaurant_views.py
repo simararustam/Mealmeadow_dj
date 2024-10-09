@@ -3,6 +3,8 @@ from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+
+from services.to_distance import calculate_distance
 from ..models import Restaurant
 from ..serializers import RestaurantSerializer
 from drf_yasg.utils import swagger_auto_schema
@@ -26,6 +28,59 @@ def get_restaurants(request):
     return JsonResponse({
         'restaurants': [r.to_dict() for r in restaurants],
         'total_restaurant': Restaurant.objects.count(),
+        'page': page,
+        'per_page': per_page
+    }, json_dumps_params={'indent': 2}, status=200)
+
+
+@swagger_auto_schema(
+    method='get',
+    manual_parameters=[
+        openapi.Parameter('lat', openapi.IN_QUERY, description="User Latitude", type=openapi.TYPE_STRING),
+        openapi.Parameter('lon', openapi.IN_QUERY, description="User Longitude", type=openapi.TYPE_STRING),
+        openapi.Parameter('page', openapi.IN_QUERY, description="Page Number", type=openapi.TYPE_STRING),
+        openapi.Parameter('limit', openapi.IN_QUERY, description="Number of Restaurants per Page",
+                          type=openapi.TYPE_STRING)
+    ],
+    responses={200: "Success"}
+)
+@api_view(['GET'])
+def get_nearby_restaurants(request):
+    '''User-in 1km yakinligindaki restoranlari qaytarir'''
+
+    lat = request.GET.get('lat')
+    lon = request.GET.get('lon')
+
+    # Check if lat and lon are provided
+    if not lat or not lon:
+        return Response({'error': 'Latitude and Longitude are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        user_lat = float(lat)
+        user_lon = float(lon)
+    except ValueError:
+        return Response({'error': 'Invalid latitude or longitude format'}, status=status.HTTP_400_BAD_REQUEST)
+
+    page = int(request.GET.get('page', 1))
+    per_page = int(request.GET.get('limit', 5))
+
+    # Find restaurants within 1 km
+    nearby_restaurants = []
+    for restaurant in Restaurant.objects.all():
+        distance = calculate_distance(user_lat, user_lon, restaurant.latitude, restaurant.longitude)
+        if distance <= 1000:  # 1 km radius
+            restaurant_data = restaurant.to_dict()
+            restaurant_data['distance'] = round(distance, 2)  # Include the distance in the response
+            nearby_restaurants.append(restaurant_data)
+
+    # Paginate the results
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated_restaurants = nearby_restaurants[start:end]
+
+    return JsonResponse({
+        'restaurants': paginated_restaurants,
+        'total_restaurants': len(nearby_restaurants),
         'page': page,
         'per_page': per_page
     }, json_dumps_params={'indent': 2}, status=200)
