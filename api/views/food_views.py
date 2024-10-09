@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from ..models import Food
+from ..models import Food, Restaurant
 from rest_framework.decorators import api_view
 from ..serializers import FoodSerializer
 from rest_framework.response import Response
@@ -52,8 +52,33 @@ def submit_food(request):
     serializer = FoodSerializer(data=request.data)
     if serializer.is_valid():
         if Food.objects.filter(name=serializer.validated_data['name']).exists():
-            return Response({"error": "Food item already exists."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Bu yemek(qida) hazirda movcuddur"}, status=status.HTTP_400_BAD_REQUEST)
         
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@swagger_auto_schema(method='put', request_body=FoodSerializer)
+@api_view(['PUT'])
+def edit_food(request, food_id):
+    try:
+        food_item = Food.objects.get(id=food_id)
+    except Food.DoesNotExist:
+        return Response({"error": "Yemek tapilmadi"}, status=status.HTTP_404_NOT_FOUND)
+
+    restaurant_name = request.data.get('restaurant_name')
+
+    if restaurant_name:
+        try:
+            restaurant = Restaurant.objects.get(name=restaurant_name)
+            food_item.restaurant = restaurant
+        except Restaurant.DoesNotExist:
+            return Response({"error": "Restoran tapilmadi"}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = FoodSerializer(food_item, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

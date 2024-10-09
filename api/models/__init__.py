@@ -4,6 +4,5 @@ from .rating import Rating
 from .notification import Notification
 from .order import Order
 from .foodOrder import OrderFood
-from .profile import Profile
 from .paymentMethod import PaymentMethod
 from .address import Address

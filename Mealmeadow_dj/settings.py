@@ -4,6 +4,12 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+#! Media root - where uploaded files will be saved
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+#! URL for accessing media files
+MEDIA_URL = '/media/'
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '3^$qf#4(j!7l1@6y$r1*1g&%l+!q&7k!z9t@0*0e3q5x#j6z#'
 

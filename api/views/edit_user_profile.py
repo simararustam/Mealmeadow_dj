@@ -1,18 +1,27 @@
+from django.contrib.auth import get_user_model
 from rest_framework.decorators import api_view
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
-from ..models import Profile
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.response import Response
+from rest_framework import status
+from ..serializers import UserProfileSerializer
 
-@csrf_exempt
-@api_view(['POST'])
-@login_required
-def edit_profile(request):
-    profile = Profile.objects.get(user=request.user)
+User = get_user_model()
 
-    profile.mobile_number = request.data.get('mobile_number')
-    if request.FILES.get('profile_image'):
-        profile.profile_image = request.FILES.get('profile_image')
-    profile.save()
-    
-    return JsonResponse({'status': 'Profile updated successfully'}, status=200)
+# ! COMMENTDƏN ÇIXART
+# @swagger_auto_schema(
+#     method='put', 
+#     request_body=UserProfileSerializer,
+# )
+@api_view(['PUT'])
+def edit_profile(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return Response({'error': 'İstifadəçi Tapılmadı'}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = UserProfileSerializer(user, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

@@ -10,8 +10,11 @@ class Food(models.Model):
     discounted_rate = models.FloatField(blank=True, null=True)
     description = models.TextField(blank=True)
     image_url = models.CharField(max_length=255, blank=True)
-    pickup_time = models.CharField(max_length=100, blank=True)
-
+    # image_url = models.ImageField(upload_to='food_images/')
+    mehsul_muddeti = models.CharField(max_length=100, blank=True)
+    elan_muddeti = models.CharField(max_length=100, blank=True)
+    quantity = models.IntegerField(default=0)
+    
     def to_dict(self):
         return {
             'id': self.id,
@@ -22,7 +25,7 @@ class Food(models.Model):
             'discounted_rate': self.discounted_rate,
             'description': self.description,
             'image_url': self.image_url,
-            'pickup_time': self.pickup_time,
-            'restaurant_id': self.restaurant.id,
-            'restaurant_name': self.restaurant.name
+            'mehsul_muddeti': self.mehsul_muddeti,
+            'elan_muddeti': self.elan_muddeti,
+            'restaurant_name': self.restaurant.name,
         }

@@ -8,7 +8,6 @@ from drf_yasg import openapi
 
 @swagger_auto_schema(method='get', responses={200: NotificationSerializer(many=True)})
 @api_view(['GET'])
-# restorana uygunb bildiris qaytarir ama buna baxacam
 def get_notifications(request, restaurant_id):
     notifications = Notification.objects.filter(restaurant_id=restaurant_id)
     serializer = NotificationSerializer(notifications, many=True)
