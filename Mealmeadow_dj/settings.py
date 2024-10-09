@@ -23,6 +23,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'social_django',
+    'drf_spectacular',
     'rest_framework',
     'rest_framework_swagger',
     'rest_framework.authtoken',
@@ -30,14 +32,30 @@ INSTALLED_APPS = [
     'api',
     'drf_yasg',
     "corsheaders",
-    "users"
+    "users",
 ]
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "718973767298-39pll5t1j659470sh9jdfl48ve03okfi.apps.googleusercontent.com"
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
+
+
+REST_USE_JWT = True
+
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -48,6 +66,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
+
 ]
 
 ROOT_URLCONF = 'Mealmeadow_dj.urls'
@@ -55,7 +75,7 @@ ROOT_URLCONF = 'Mealmeadow_dj.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -171,3 +191,7 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
+
+
+
+SOCIAL_AUTH_PASSWORD = "socialauthpassword"

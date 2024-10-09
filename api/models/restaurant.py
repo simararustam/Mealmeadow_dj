@@ -4,7 +4,7 @@ from django.db import models
 class Restaurant(models.Model):
     name = models.CharField(max_length=100)
     category = models.CharField(max_length=100, blank=True)
-    # address = models.TextField()--migrate ele
+    address = models.TextField() #--migrate ele
     rating = models.FloatField(blank=True, null=True)
     # owner = models.OneToOneField(User, on_delete=models.CASCADE)
     owner_name = models.CharField(max_length=255, default='Default')

@@ -8,5 +8,5 @@ class Profile(models.Model):
     mobile_number = models.CharField(max_length=15, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.user.username} Profili"
+        return f"{self.user.name} {self.user.last_name} Profili"
     

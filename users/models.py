@@ -1,9 +1,19 @@
 from django.db import models
+from django.contrib.auth.models import Group, Permission
 from django.contrib.auth.models import (
     AbstractBaseUser,
     PermissionsMixin,
     BaseUserManager)
-from django.contrib.auth.models import Group, Permission
+
+GENDER_CHOICES = (
+    ('Kişi', 'Kişi'),
+    ('Qadın', 'Qadın'),
+)
+
+AUTH_PROVIDERS = {
+    'google': 'google',
+    'email': 'email'
+}
 
 class UserManager(BaseUserManager):
     def create_user(self, phone, password=None, **extra_fields):
@@ -15,6 +25,7 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, phone, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True')
@@ -25,8 +36,17 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=50)
     phone = models.CharField(max_length=15, unique=True)
     email = models.EmailField(max_length=255, unique=True)
+    image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
+    birth_date = models.DateField(null=True, blank=True)
+    gender = models.CharField(max_length=10, choices = GENDER_CHOICES, default='Kişi')
+    auth_providers = models.CharField(max_length=255, default=AUTH_PROVIDERS.get('email'))
+
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
 
     groups = models.ManyToManyField(
         Group,
@@ -47,7 +67,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name', 'last_name']
+    REQUIRED_FIELDS = ['name', 'last_name', 'phone']
 
     def __str__(self):
         return f'{self.name} {self.last_name} {self.phone}'

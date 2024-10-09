@@ -1,15 +1,19 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
-from rest_framework_simplejwt.tokens import RefreshToken
+from users.utils import Google
+from django.conf import settings
+from users.utils import register_social_user
 
 User = get_user_model()
 
 class RegisterSerializer(serializers.ModelSerializer):
+
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
+        ref_name = 'CustomUserRegister'
         model = User
         fields = ('name', 'last_name', 'phone', 'email', 'password', 'password2')
 
@@ -34,6 +38,9 @@ class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
     password = serializers.CharField(write_only=True)
 
+    class Meta:
+        ref_name = 'CustomUserLogin'
+
     def validate(self, data):
         email = data.get("email", "")
         password = data.get("password", "")
@@ -41,3 +48,25 @@ class LoginSerializer(serializers.Serializer):
         if user and user.check_password(password):
             return user
         raise serializers.ValidationError("Invalid credentials")
+
+
+class GoogleSignInSerializer(serializers.Serializer):
+    access_token = serializers.CharField(required=True)
+
+    class Meta:
+        ref_name = 'GoogleSignIn'
+
+    def validate_access_token(self, access_token):
+        google_user_data = Google.validate(access_token)
+        try:
+            userId = google_user_data['sub']
+        except Exception as e:
+            raise serializers.ValidationError("Invalid token or Expired")
+        
+        if google_user_data['aud'] != settings.GOOGLE_CLIENT_ID:
+            raise serializers.ValidationError("Could not verify the token")
+        email = google_user_data['email']
+        name = google_user_data['given_name']
+        last_name = google_user_data['family_name']
+        provider = 'google'
+        return register_social_user(provider, email, name, last_name)

@@ -11,5 +11,5 @@ class Address(models.Model):
     # city = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"{self.address_type} address for {self.user.username}"
+        return f"{self.address_type} address for {self.user.name} {self.user.last_name}"
     

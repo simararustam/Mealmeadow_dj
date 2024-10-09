@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <title>Google Sign-In with GIS</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+      function handleCredentialResponse(response) {
+        // The response will contain the token (response.credential)
+        console.log("ID Token: " + response.credential);
+        console.log("test")
+        // Send the ID token to your backend for authentication
+        fetch('http://localhost:8000/api/google/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ access_token: response.credential }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Success:', data);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+      }
+
+      window.onload = function () {
+        google.accounts.id.initialize({
+          client_id: "718973767298-39pll5t1j659470sh9jdfl48ve03okfi.apps.googleusercontent.com",
+          use_fedcm_for_prompt: false,
+          callback: handleCredentialResponse
+        });
+        google.accounts.id.renderButton(
+          document.getElementById("g_id_signin"),
+          { theme: "outline", size: "large" } // Customization attributes
+        );
+        google.accounts.id.prompt(); // Show the one-tap prompt
+      };
+    </script>
+</head>
+<body>
+    <!-- The Google Sign-In button -->
+    <div id="g_id_signin"></div>
+</body>
+</html>

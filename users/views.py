@@ -4,9 +4,19 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import RegisterSerializer, LoginSerializer
+from .serializers import RegisterSerializer, LoginSerializer, GoogleSignInSerializer
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from django.contrib.auth import get_user_model
+from django.shortcuts import render
+from rest_framework.generics import GenericAPIView
+
+
+
+User = get_user_model()
+
+def test(request):
+    return render(request, 'test.html')
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
@@ -52,3 +62,13 @@ class LoginView(APIView):
                 "access": str(refresh.access_token),
             }, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class GoogleSignInView(GenericAPIView):
+    serializer_class = GoogleSignInSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        print("data",serializer.validated_data)
+        data=((serializer.validated_data)['access_token'])
+        return Response(data, status=status.HTTP_200_OK)
