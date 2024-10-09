@@ -103,7 +103,7 @@ class RequestPasswordResetView(APIView):
             token = token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             # Send email (simplified, adjust this to your needs)
-            reset_url = f"http://127.0.0.1:8000/api/reset-password/{uid}/{token}/"
+            reset_url = f"https://www.mealmeadow.site/api/reset-password/{uid}/{token}/"
             send_mail(
                 'Password Reset Request',
                 f'Click the link to reset your password: {reset_url}',
