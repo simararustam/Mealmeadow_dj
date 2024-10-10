@@ -33,7 +33,7 @@ def all_users(request):
     users_data = []
     for user in users:
         users_data.append({
-            'name': user.first_name,
+            'name': user.name,
             'last_name': user.last_name,
             'email': user.email,
             'phone': user.phone,

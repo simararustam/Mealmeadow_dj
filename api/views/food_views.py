@@ -42,8 +42,8 @@ def get_foods(request):
 @api_view(['GET'])
 def get_all_foods(request):
     all_foods = Food.objects.all()
-    food_data = [f.to_dict() for f in all_foods]
-    return JsonResponse(food_data, safe=False, json_dumps_params={'indent': 2}, status = 200)
+    serializer = FoodSerializer(all_foods, many=True)
+    return Response(serializer.data)
 
 # !-----partnyorlar-----
 @swagger_auto_schema(method='post', request_body=FoodSerializer)

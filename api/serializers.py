@@ -9,13 +9,14 @@ class RestaurantSerializer(serializers.ModelSerializer):
 
 class FoodSerializer(serializers.ModelSerializer):
     restaurant_name = serializers.CharField(source='restaurant.name', read_only=True)
-
+    
     class Meta:
         model = Food
         fields = ['id', 'name', 'food_type', 'price', 
                   'discounted_price', 'discounted_rate', 
-                  'description', 'image_url', 'restaurant_name', 
-                  'restaurant', 'quantity', 'elan_muddeti', 'mehsul_muddeti']
+                  'description', 'restaurant_name', 
+                  'restaurant', 'quantity', 'elan_muddeti', 'mehsul_muddeti', 'image']
+    
 
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta():

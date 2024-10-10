@@ -19,8 +19,8 @@ def create_order(request):
         order = serializer.save()
 
         user = order.user
-        message = f"Yeni sifarish: {user.first_name} {user.last_name} ({user.email}):\n"
-        message += "\n".join([f"{item.food.name} - {item.quantity}" for item in order.order_items.all()])
+        message = f"Yeni sifarish: {user.name} {user.last_name} ({user.email}): "
+        message += "\n".join([f"{item.food.name} - {item.quantity} eded" for item in order.order_items.all()])
 
         Notification.objects.create(
             restaurant=order.restaurant,

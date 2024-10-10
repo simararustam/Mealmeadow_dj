@@ -9,8 +9,7 @@ class Food(models.Model):
     discounted_price = models.FloatField(blank=True, null=True)
     discounted_rate = models.FloatField(blank=True, null=True)
     description = models.TextField(blank=True)
-    image_url = models.CharField(max_length=255, blank=True)
-    # image_url = models.ImageField(upload_to='food_images/')
+    image = models.ImageField(upload_to='food_images/', blank=True, null=True)
     mehsul_muddeti = models.CharField(max_length=100, blank=True)
     elan_muddeti = models.CharField(max_length=100, blank=True)
     quantity = models.IntegerField(default=0)
@@ -24,8 +23,8 @@ class Food(models.Model):
             'discounted_price': self.discounted_price,
             'discounted_rate': self.discounted_rate,
             'description': self.description,
-            'image_url': self.image_url,
             'mehsul_muddeti': self.mehsul_muddeti,
             'elan_muddeti': self.elan_muddeti,
             'restaurant_name': self.restaurant.name,
+            'image': self.image.url if self.image else None, 
         }
