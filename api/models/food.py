@@ -1,6 +1,7 @@
 from django.db import models
 from .restaurant import Restaurant
 
+
 class Food(models.Model):
     name = models.CharField(max_length=100)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='foods', default=None)
@@ -9,8 +10,10 @@ class Food(models.Model):
     discounted_price = models.FloatField(blank=True, null=True)
     discounted_rate = models.FloatField(blank=True, null=True)
     description = models.TextField(blank=True)
-    image_url = models.CharField(max_length=255, blank=True)
-    pickup_time = models.CharField(max_length=100, blank=True)
+    image = models.ImageField(upload_to='food_images/', blank=True, null=True)
+    mehsul_muddeti = models.CharField(max_length=100, blank=True)
+    elan_muddeti = models.CharField(max_length=100, blank=True)
+    quantity = models.IntegerField(default=0)
 
     def to_dict(self):
         return {
@@ -21,8 +24,8 @@ class Food(models.Model):
             'discounted_price': self.discounted_price,
             'discounted_rate': self.discounted_rate,
             'description': self.description,
-            'image_url': self.image_url,
-            'pickup_time': self.pickup_time,
-            'restaurant_id': self.restaurant.id,
-            'restaurant_name': self.restaurant.name
+            'mehsul_muddeti': self.mehsul_muddeti,
+            'elan_muddeti': self.elan_muddeti,
+            'restaurant_name': self.restaurant.name,
+            'image': self.image.url if self.image else None,
         }
