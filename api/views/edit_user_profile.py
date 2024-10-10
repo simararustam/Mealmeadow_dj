@@ -8,10 +8,10 @@ from ..serializers import UserProfileSerializer
 User = get_user_model()
 
 # ! COMMENTDƏN ÇIXART
-# @swagger_auto_schema(
-#     method='put', 
-#     request_body=UserProfileSerializer,
-# )
+@swagger_auto_schema(
+     method='put', 
+     request_body=UserProfileSerializer,
+)
 @api_view(['PUT'])
 def edit_profile(request, user_id):
     try:
